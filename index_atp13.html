@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construtor de Sites Ditho - ATP13</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-dark: #001B3D;
+            --primary-light: #003366;
+            --accent: #FF5500;
+            --glass: rgba(255, 255, 255, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #000C1A 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            height: 20vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(255, 85, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        main {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .platform-select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: rgba(255, 85, 0, 0.1);
+            margin-left: 20%;
+            border-radius: 1rem 1rem 0 1rem;
+        }
+
+        .assistant-message {
+            background: rgba(255, 255, 255, 0.05);
+            margin-right: 20%;
+            border-radius: 1rem 1rem 1rem 0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .prompt-area {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            height: 60px;
+        }
+
+        .submit-button {
+            padding: 1rem;
+            width: 60px;
+            background: var(--accent);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .version-tag {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        footer {
+            height: 20vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="version-tag">ATP13</div>
+    <div class="particles" id="particles"></div>
+    
+    <header>
+        <div class="logo">Construtor de Sites Ditho</div>
+    </header>
+
+    <main>
+        <div class="glass-panel">
+            <select class="platform-select" id="platformSelect">
+                <option value="wordpress">WordPress</option>
+                <option value="shopify">Shopify</option>
+                <option value="wix">Wix</option>
+                <option value="custom">Personalizado</option>
+            </select>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message assistant-message">
+                    Olá! Como posso ajudar você hoje? Estou aqui para criar seu site exatamente como você imagina!
+                </div>
+            </div>
+
+            <div class="input-container">
+                <textarea 
+                    class="prompt-area" 
+                    id="promptArea" 
+                    placeholder="Digite sua mensagem..."
+                    rows="2"
+                ></textarea>
+                
+                <button class="submit-button" id="submitPrompt">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="copyright">© 2024 Ditho - Transformando ideias em realidade</div>
+    </footer>
+
+    <script>
+        // Configurações
+        const config = {
+            API_KEY: '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',
+            API_URL: 'https://api-inference.huggingface.co/models/pierreguillou/gpt2-small-portuguese'
+        };
+
+        // Elementos do DOM
+        const chatContainer = document.getElementById('chatContainer');
+        const promptArea = document.getElementById('promptArea');
+        const submitButton = document.getElementById('submitPrompt');
+        const platformSelect = document.getElementById('platformSelect');
+
+        // Função para adicionar mensagem ao chat
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
+            messageDiv.textContent = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Função para gerar resposta da IA
+        async function generateResponse(userMessage, platform) {
+            const prompt = `
+            Assistente: Olá! Sou um assistente especializado em criar sites com ${platform}.
+            Usuário: ${userMessage}
+            Assistente:`;
+
+            try {
+                const response = await fetch(config.API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${config.API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        inputs: prompt,
+                        parameters: {
+                            max_length: 100,
+                            temperature: 0.7,
+                            top_p: 0.9,
+                            do_sample: true,
+                            return_full_text: false
+                        }
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Falha na requisição à API');
+                }
+
+                const data = await response.json();
+                return data[0].generated_text.split('Assistente:').pop().trim();
+            } catch (error) {
+                console.error('Erro:', error);
+                throw error;
+            }
+        }
+
+        // Função para processar o envio
+        async function handleSubmit() {
+            const message = promptArea.value.trim();
+            const platform = platformSelect.value;
+
+            if (!message) return;
+
+            // Adiciona mensagem do usuário
+            addMessage(message, true);
+
+            // Limpa a área de texto
+            promptArea.value = '';
+
+            try {
+                // Desabilita botão e mostra loading
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                submitButton.disabled = true;
+
+                // Gera e adiciona resposta
+                const response = await generateResponse(message, platform);
+                addMessage(response);
+
+            } catch (error) {
+                addMessage('Desculpe, estou com dificuldade para responder agora. Pode tentar novamente?');
+            } finally {
+                // Restaura botão
+                submitButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Event Listeners
+        submitButton.addEventListener('click', handleSubmit);
+
+        promptArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+            }
+        });
+
+        // Partículas de fundo
+        function createParticle() {
+            const particles = document.getElementById('particles');
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '2px';
+            particle.style.height = '2px';
+            particle.style.background = 'rgba(255, 255, 255, 0.5)';
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.top = '100vh';
+            particle.style.animation = `particle ${Math.random() * 3 + 2}s linear`;
+            particles.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        setInterval(createParticle, 100);
+
+        // Animação das partículas
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particle {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 0;
+                }
+                50% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) scale(0);
+                    opacity: 0;
+                }
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
